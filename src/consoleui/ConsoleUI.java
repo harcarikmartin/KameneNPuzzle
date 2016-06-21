@@ -72,7 +72,7 @@ public class ConsoleUI implements UserInterface{
 			String right = matcher.group(6);
 			
 			if(newGame != null) {
-				
+				new Kamene();
 			}
 			if(exit == null) {
 				exit = "";

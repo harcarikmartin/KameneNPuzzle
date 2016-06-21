@@ -8,7 +8,7 @@ public class Kamene {
 	private static Kamene instance;
 	private UserInterface userInterface;
 	
-	private Kamene() {
+	public Kamene() {
 		instance = this;
 		userInterface = new ConsoleUI();
 		Field field = new Field(4, 4);
