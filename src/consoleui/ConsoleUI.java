@@ -1,8 +1,10 @@
 package consoleui;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Matcher;
@@ -10,6 +12,7 @@ import java.util.regex.Pattern;
 
 import core.Field;
 import core.GameState;
+import kamene.Kamene;
 import kamene.UserInterface;
 
 public class ConsoleUI implements UserInterface{
@@ -21,26 +24,26 @@ public class ConsoleUI implements UserInterface{
 	@Override
 	public void newGameStarted(Field field) {
 		this.field = field;
-		printField();
 		shuffle();
 		
-//		do {
-//			update();
-//			if (field.getState().equals(GameState.SOLVED)) {
-//				System.out.println("You WON");
-//				System.exit(0);
-//			}
+		do {
+			printField();
 			processInput();
-//		} while (true);
+			if (field.getState().equals(GameState.SOLVED)) {
+				System.out.println("You WON");
+				System.out.println("Total playing time " + Kamene.getInstance().getPlayingSeconds());
+				System.exit(0);
+			}
+		} while (true);
 		
 	}
 
 	private void shuffle() {
 		Collections.shuffle(field.getTiles());
-		printField();
 	}
 
 	private void processInput() {
+		System.out.println("Time playing: " + Kamene.getInstance().getPlayingSeconds() + " sec");
 		System.out.printf("Please enter your selection <new> NEW GAME, <exit> EXIT, <w/up> UP, "
 				+ "<s/down> DOWN, <a/left> LEFT, <d/right> RIGHT: ");
 		String input = readLine();
@@ -71,34 +74,42 @@ public class ConsoleUI implements UserInterface{
 			String left = matcher.group(5);
 			String right = matcher.group(6);
 			
-			for (int i = 0; i <= matcher.groupCount(); i++) {
-				System.out.println(matcher.group(i));
-			}
 			if(newGame != null) {
 				
 			}
 			if(exit == null) {
 				exit = "";
 			}
-			if(exit != null) {
+			if(exit.equals("exit")) {
+//				field.save();
 				System.out.println("Exit");
 				System.exit(0);
 			}
 			if(up != null) {
 				field.moveTileUp();
+				isGameSolved();
 			}
 			if(down != null) {
 				field.moveTileDown();
+				isGameSolved();
 			}
 			if(left != null) {
 				field.moveTileLeft();
+				isGameSolved();
 			}
 			if(right != null) {
 				field.moveTileRight();
+				isGameSolved();
 			}
 		}
 		else {
 			throw new WrongFormatException("Wrong format of input, try again.");
+		}
+	}
+
+	private void isGameSolved() {
+		if(field.isSolved()) {
+			field.setState(GameState.SOLVED);
 		}
 	}
 
