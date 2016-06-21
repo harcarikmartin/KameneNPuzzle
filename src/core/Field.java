@@ -1,10 +1,9 @@
 package core; 
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Field implements Serializable {
+public class Field {
 	private final int rowCount;
 	private final int columnCount;
 	private GameState state = GameState.PLAYING;
